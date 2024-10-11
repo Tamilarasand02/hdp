@@ -12,7 +12,7 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
-  PYTHON_VERSION: '3.8' # set this to the python version to use (supports 3.6, 3.7, 3.8)
+  PYTHON_VERSION: '3.11' # set this to the python version to use (supports 3.6, 3.7, 3.8)
 
 jobs:
   build:
@@ -52,7 +52,7 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
 
@@ -68,9 +68,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_BBEE774AAFED4BE5A1CE5191F21F4923 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_DB9F4CA133034D119C8764987E49EE12 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CE0C9D91939146799109FE814B08D438 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F4772B24D9BA4ADDA7E3448CCCA7E4AE }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_AD6CA604C9714579A852742438CB209B }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_662743F6DECD4F8EB9945ACE6B1A0FD9 }}
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
