@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Python version
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -40,7 +40,7 @@ jobs:
         run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: python-app
           path: |
@@ -52,25 +52,16 @@ jobs:
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
+      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: python-app
 
       - name: Unzip artifact for deployment
-        run: unzip release.zip     
-        
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2157CF5CEFB2438EBB599B1A7431408F }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_53AD2ED754314EE787B5042AD9027034 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_AD94EED2F62448A2A858D476AC506AA5 }}
+        run: unzip release.zip
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
@@ -79,6 +70,6 @@ jobs:
           app-name: 'hdp'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F71F53C88CDB49DFA9C12E28DFF221C2 }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
-          
