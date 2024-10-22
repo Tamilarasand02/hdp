@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: tamilarasandhdp 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tamilarasandhdp
+  template:
+    metadata:
+      labels:
+        app: tamilarasandhdp 
+    spec:
+      containers:
+        - name: tamilarasandhdp 
+          image: registryprodtest.azurecr.io/tamilarasandhdp
+          ports:
+          - containerPort: 80
